@@ -23,12 +23,52 @@ struct contactoEmail
     string Nacionalidad;
 };
 
+void agregarcontacto(){
+
+}
+
+void eliminarcontacto(){
+
+}
+void contactosregistrados(){
+
+}
+void contactosexistentes(){
+
+}
+void mensajesalida(){
+
+}
+
 void menu(){
+    cout << "1. Agregar un contacto" << endl;
+    cout << "2. Eliminar un contacto" << endl;
+    cout << "3. Mostrar contactos registrados" << endl;
+    cout << "4. Mostrar contactos existentes" << endl;
+    cout << "5. Salir del programa" << endl;
     int opcion;
     do {
-    
+        cin >> opcion;
+        switch (opcion){
+            case 1 :
+                agregarcontacto();
+                break;
+            case 2 :
+                eliminarcontacto();
+                break;
+            case 3 : 
+                contactosregistrados();
+                break;
+            case 4 : 
+                contactosexistentes();
+                break;
+            case 5 :
+                mensajesalida();
+            default:
+                cout <<  "ERROR" ;
+        }
 
-    } while (opcion != 2);
+    } while (opcion != 5);
 }
 
 int main(){
