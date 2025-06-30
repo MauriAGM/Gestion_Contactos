@@ -12,7 +12,7 @@ El programa debe mantenerse en ejecución continuamente hasta que usuario indiqu
 #include<iostream>
 using namespace std;
 
-struct contactoEmail
+struct contactoEmail // Estructura para almacenar los datos de un contacto 
 {
     string Nombres;
     string Apellidos;
@@ -23,7 +23,7 @@ struct contactoEmail
     string Nacionalidad;
 };
 
-contactoEmail agregarcontacto(){
+contactoEmail agregarcontacto(){ // Funcion para agregar un contacto 
     contactoEmail contactos;
     cin.ignore();
     cout << "Ingrese el nombre ";
@@ -43,21 +43,19 @@ contactoEmail agregarcontacto(){
     getline(cin, contactos.Nacionalidad);
     return contactos;
 }
-
-void agregarcontaco(contactoEmail contactos[],int &TAM, int &MAX){
+void agregarcontaco(contactoEmail contactos[],int &TAM){
     contactos[TAM] = agregarcontacto();
     TAM++;
-    MAX++;
 }
-
-void eliminarcontacto(contactoEmail contactos[], int &TAM){
+void eliminarcontacto(contactoEmail contactos[], int &TAM){ // funcion para eliminar un contacto
     bool encontrado = false;
+    cin.ignore();
     string buscar_email;
     cout << "Ingrese el email del contacto a eliminar: ";
     getline(cin, buscar_email);
     for (int i = 0; i < TAM; i++){
         if (contactos[i].Email == buscar_email){
-            for (int j = 0; i < TAM - 1; j++){
+            for (int j = i; j < TAM - 1; j++){
                 contactos[j] = contactos[j + 1];
             }
             TAM --; 
@@ -69,7 +67,7 @@ void eliminarcontacto(contactoEmail contactos[], int &TAM){
         cout << "No se encontro el contacto" << endl;
     }
 }
-void contactosregistrados(contactoEmail contactos[], int TAM){
+void contactosregistrados(contactoEmail contactos[], int &TAM){ // funcion para ver contactos registrados
     cout << "Contactos registrados: " << endl; 
     for (int i = 0; i < TAM; i++) {
         cout << " [ " << i + 1 << " ] ";
@@ -83,16 +81,56 @@ void contactosregistrados(contactoEmail contactos[], int TAM){
     }
     cout << endl;
 }
-
-void contactosexistentes(){
-
+string obtenerDominio(string email) { // funcion para separar contactos de acuerdo a sus dominios
+    string dominio = "";
+    bool copiar = false;
+    for (int i = 0; i < email.length(); i++) {
+        if (email[i] == '@') {
+            copiar = true;
+            continue;
+        }
+        if (copiar) {
+            dominio += email[i];
+        }
+    }
+    return dominio;
 }
-void mensajesalida(){
-
+void contactosordenados(contactoEmail contactos[], int &TAM){ // funcion que ordena contactos de acuerdo a sus dominios
+    if (TAM == 0) {
+        cout << "No hay contactos para mostrar.\n";
+        return;
+    }
+    cout << "\nGMAIL:\n"; // Muestra contactos de @gmail.com
+    for (int i = 0; i < TAM; i++) {
+        if (obtenerDominio(contactos[i].Email) == "gmail.com") {
+            cout << "- " << contactos[i].Nombres << " " << contactos[i].Apellidos << " | " << contactos[i].Email << endl;
+        }
+    }
+    cout << "\nOUTLOOK:\n";  // Muestra contactos de @outlook.com
+    for (int i = 0; i < TAM; i++) {
+        if (obtenerDominio(contactos[i].Email) == "outlook.com") {
+            cout << "- " << contactos[i].Nombres << " " << contactos[i].Apellidos << " | " << contactos[i].Email << endl;
+        }
+    }
+    cout << "\nYAHOO:\n"; // Muestra contactos de @yahoo.com
+    for (int i = 0; i < TAM; i++) {
+        if (obtenerDominio(contactos[i].Email) == "yahoo.com") {
+            cout << "- " << contactos[i].Nombres << " " << contactos[i].Apellidos << " | " << contactos[i].Email << endl;
+        }
+    }
+    cout << "\nOTROS DOMINIOS:\n"; // Muestra contactos de otros dominios
+    for (int i = 0; i < TAM; i++) {
+        string dominio = obtenerDominio(contactos[i].Email);
+        if (dominio != "gmail.com" && dominio != "outlook.com" && dominio != "yahoo.com") {
+            cout << "- " << contactos[i].Nombres << " " << contactos[i].Apellidos << " | " << contactos[i].Email << endl;
+        }
+    }
 }
-
+void mensajesalida(){ // funcion de mensaje de salida   
+    cout << "Gracias por usar el programa. Hasta pronto.\n";
+}
 void menu(){
-    int MAX = 1;
+    int MAX = 100;
     contactoEmail contactos[MAX];
     int TAM = 0;
     int opcion;
@@ -105,7 +143,7 @@ void menu(){
         cin >> opcion;
         switch (opcion){
             case 1 :
-                agregarcontaco(contactos, TAM, MAX); 
+                agregarcontaco(contactos, TAM); 
                 break;
             case 2 :
                 eliminarcontacto(contactos, TAM);
@@ -114,12 +152,14 @@ void menu(){
                 contactosregistrados(contactos, TAM);
                 break;
             case 4 : 
-                contactosexistentes();
+                contactosordenados(contactos, TAM);
                 break;
             case 5 :
                 mensajesalida();
+                break;
+            default :
+                cout << "Opcion invalida, intente nuevamente" << endl;
         }   
-
     } while (opcion != 5);
 }
 int main(){
